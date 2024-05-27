@@ -1,0 +1,15 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteRule ^$ index.php?controller=main&action=index [NC,L,QSA]
+    RewriteRule ^(.*)\/(.*)$ index.php?controller=$1&action=$2 [NC,L,QSA]
+    RewriteRule ^(.*)$ index.php?controller=$1&action=index [NC,L,QSA]
+</IfModule>
+
+# Prevent viewing of .htaccess file
+<Files .htaccess>
+    order allow,deny
+    deny from all
+</Files>
+
+# Prevent directory listings
+Options All -Indexes
