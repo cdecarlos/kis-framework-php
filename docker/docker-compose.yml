@@ -1,0 +1,42 @@
+version: '3.7'
+services:
+  php:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: kis-framework-php
+    volumes:
+      - ../:/var/www/html
+    ports:
+      - "8080:80"
+    links:
+      - db
+    depends_on:
+      - db
+
+  db:
+    image: mariadb
+    container_name: kis-framework-db
+    #    ports:
+    #      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: "${DB_PASS-test}"
+      MYSQL_DATABASE: "${DB_NAME-kis_framework}"
+      MYSQL_USER: "${DB_USER-kis_framework_user}"
+      MYSQL_PASSWORD: "${DB_PASS-kis_framework_pass}"
+    volumes:
+      - ./db/init:/docker-entrypoint-initdb.d
+      - ./db/dist:/var/lib/mysql
+
+  phpmyadmin:
+    image: phpmyadmin
+    container_name: kis-framework-phpmyadmin
+    links:
+      - db
+    depends_on:
+      - db
+    environment:
+      PMA_HOST: db
+      PMA_PORT: 3306
+    ports:
+      - "8081:80"
